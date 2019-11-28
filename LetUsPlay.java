@@ -3,6 +3,7 @@
 //Written by: Simon Fortier Drouin 27207328
 //For COMP 248 Section FF – Fall 2019
 //--------------------------------------------------------
+import java.util.Random;
 import java.util.Scanner;
 
 public class LetUsPlay {
@@ -15,6 +16,9 @@ public class LetUsPlay {
 	//boolean invalidLevel=true;
 	//boolean invalidSize=true;
 	Board board;
+	
+	boolean playing = true;
+	
 	private static void displayBanner() {
 		System.out.println("Welcome to my game!");
 	}
@@ -80,11 +84,40 @@ public class LetUsPlay {
 		}
 
 		Dice dice=new Dice();
+		System.out.print("\n\nWhat is player 0's name (one word only): ");
 		Player player1=new Player(keyboard.next());
+		System.out.print("\nWhat is player 1's name (one word only): ");
 		Player player2=new Player(keyboard.next());
+		Player[] playerArray = {player1,player2};
+		
+		//who goes first?
+		switch(new Random().nextInt(1)) {
+			case 0:
+				System.out.println("\nThe game has started "+playerArray[0].getName()+" goes first\n"+"=============================\n");
+				playerArray[0]=player1;
+				playerArray[1]=player2;
+				break;
+			case 1:
+				System.out.println("\nThe game has started "+playerArray[1].getName()+" goes first\n"+"=============================\n");
+				playerArray[0]=player2;
+				playerArray[1]=player1;
+				break;
+		}
+		
+		
+		while(playing) {
+			for(Player player : playerArray) {
+				if(player.getEnergy()<=0) {
+					for(int i=0;i<3;i++) {
+						dice.rollDice();
+						
+					}
+				}
+				System.out.println(player.toString());
+			}
+		}
 
-		System.out.println(player1.toString());
-		System.out.println(player2.toString());
+		
 		keyboard.close();
 	}
 	public static void main(String[] args) {

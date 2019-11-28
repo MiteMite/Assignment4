@@ -44,16 +44,19 @@ public class Player {
 	}
 	//accessors
 	public int getLevel() {
-		return level;
+		return this.level;
 	}
 	public int getX() {
-		return x;
+		return this.x;
 	}
 	public int getY() {
-		return y;
+		return this.y;
 	}
 	public int getEnergy() {
-		return energy;
+		return this.energy;
+	}
+	public String getName() {
+		return this.name;
 	}
 	
 	//mutators
