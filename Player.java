@@ -12,21 +12,35 @@ public class Player {
 		this.x=0;
 		this.y=0;
 	}
-	Player(Player p){	//copy constructor
-		
+	//enter player name
+	Player(String n){
+		this.name = n;
 	}
-	
+	Player(int l, int x, int y){	//copy constructor
+		this.name = "";
+		this.level = l;
+		this.x = x;
+		this.y = y;
+		this.energy = 10;
+	}
 	public void moveTo(Player p) {
-		
+		this.level = p.level;
+		this.x = p.x;
+		this.y = p.y;
 	}
-	public void won(Board b) {
-		
+	//returns if the player has reached the last spot on the board
+	public boolean won(Board b) {
+		if(this.level == b.getLevel()&&this.x==b.getSize()&&this.y==b.getSize()) {
+			return true;
+		}else {
+			return false;
+		}
 	}
 	public boolean equals(Player p) {
 		return true;
 	}
 	public String toString() {
-		return "";
+		return this.name+" is on level "+this.level+" at location ("+this.x+","+this.y+") "+"and has "+this.energy+" units of energy.";
 	}
 	//accessors
 	public int getLevel() {
