@@ -18,6 +18,7 @@ public class Board {
 	Board(int l, int x){
 		this.level=l;
 		this.size=x;
+		createBoard(this.level, this.size);
 	}
 	private void createBoard(int l, int x) {
 		

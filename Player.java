@@ -16,7 +16,7 @@ public class Player {
 	Player(String n){
 		this.name = n;
 	}
-	Player(int l, int x, int y){	//copy constructor
+	Player(int l, int x, int y){
 		this.name = "";
 		this.level = l;
 		this.x = x;

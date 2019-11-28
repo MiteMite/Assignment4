@@ -8,8 +8,12 @@ import java.util.Scanner;
 public class LetUsPlay {
 	Player player1;
 	Player player2;
+	int levelSelection;
 	int sizeSelection;
-	boolean invalid=true;
+	boolean boardSelection=true;
+	int levelNumber;
+	//boolean invalidLevel=true;
+	//boolean invalidSize=true;
 	Board board = new Board();
 	private static void displayBanner() {
 		System.out.println("Welcome to my game!");
@@ -19,40 +23,55 @@ public class LetUsPlay {
 		System.out.print("==> What do you want to do? ");
 		Scanner keyboard = new Scanner(System.in);
 
-		//check for valid board size
-		while(invalid) {
-			sizeSelection=keyboard.nextInt();
-			if(sizeSelection==0||sizeSelection==-1) {
-				if(sizeSelection==0) {
+		//check for valid level amount
+		while(boardSelection) {
+			levelSelection=keyboard.nextInt();
+			if(levelSelection==0||levelSelection==-1) {
+				if(levelSelection==0) {
 					board=new Board();
 				}
-				if(sizeSelection==-1) {
+				if(levelSelection==-1) {
+					//check for valid level amount
+					boolean invalidLevel=true;
+					while(invalidLevel) {
+						System.out.print("How many levels would you like? (minimum size 3, max 10) ");
+						levelNumber = keyboard.nextInt();
+						if(levelNumber<3||levelNumber>10) {
+							System.out.println("Sorry but "+levelNumber+" is not a legal choice.");
+						}else {
+							invalidLevel=false;
+						}
+					}
+					//check for valid board size
 					boolean invalidSize=true;
 					while(invalidSize) {
-						System.out.print("How many levels would you like? (minimum size 3, max 10) ");
-						int boardSize = keyboard.nextInt();
-						if(boardSize<3||boardSize>10) {
-							System.out.println("Sorry but "+boardSize+" is not a legal choice.");
+						System.out.print("What size do you want the nxn boards on each level to be? \n");
+						System.out.println("Minimum size is 4x4, max is 10x10. ");
+						System.out.print("==> enter the value of n: ");
+						sizeSelection=keyboard.nextInt();
+						if(sizeSelection<4||sizeSelection>10) {
+							System.out.println("Sorry but  "+sizeSelection+" is not a legal choice.");
 						}else {
-							board = new Board(boardSize,boardSize);
 							invalidSize=false;
 						}
 					}
-
+					board = new Board(levelNumber,sizeSelection);
 				}
-				invalid=false;
+				boardSelection=false;
 			}else {
-				System.out.println("Sorry but "+sizeSelection+" is not a legal choice");
+				System.out.println("Sorry but "+levelSelection+" is not a legal choice");
 			}
+
 		}
+
 		
 		//display 3D board
 		System.out.println("Your 3D board has been set up and looks like this: \n");
 		System.out.println("size of instanced board "+board.getSize());
-		for(int level=0;level<board.getLevel();++level) {
+		for(int level=0;level<board.getLevel();level++) {
 			System.out.println("Level "+level+"\n"+"________\n");
-			for(int row=0; row<board.getSize()-1;++row) {
-				for(int column=0; column<board.getSize()-1;++column) {
+			for(int row=0; row<board.getSize()-1;row++) {
+				for(int column=0; column<board.getSize()-1;column++) {
 					System.out.print(board.getEnergyAdj(level, row, column)+"\t");
 				}
 			}
