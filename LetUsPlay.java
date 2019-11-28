@@ -14,7 +14,7 @@ public class LetUsPlay {
 	int levelNumber;
 	//boolean invalidLevel=true;
 	//boolean invalidSize=true;
-	Board board = new Board();
+	Board board;
 	private static void displayBanner() {
 		System.out.println("Welcome to my game!");
 	}
@@ -66,13 +66,15 @@ public class LetUsPlay {
 
 		
 		//display 3D board
-		System.out.println("Your 3D board has been set up and looks like this: \n");
-		System.out.println("size of instanced board "+board.getSize());
-		for(int level=0;level<board.getLevel();level++) {
-			System.out.println("Level "+level+"\n"+"________\n");
-			for(int row=0; row<board.getSize()-1;row++) {
-				for(int column=0; column<board.getSize()-1;column++) {
-					System.out.print(board.getEnergyAdj(level, row, column)+"\t");
+		System.out.print("Your 3D board has been set up and looks like this: ");
+		for(int lvl=0;lvl<board.getLevel();lvl++) {
+			System.out.println("\n\nLevel "+lvl+"\n"+"________");
+			for(int row=0; row<board.getSize();row++) {
+				if(row>=0) {
+					System.out.println("");
+				}
+				for(int column=0; column<board.getSize();column++) {
+					System.out.print(board.getEnergyAdj(lvl, row, column)+"\t");
 				}
 			}
 		}
