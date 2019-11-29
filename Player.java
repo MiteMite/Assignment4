@@ -30,7 +30,7 @@ public class Player {
 	}
 	//returns if the player has reached the last spot on the board
 	public boolean won(Board b) {
-		if(this.level == b.getLevel()&&this.x==b.getSize()&&this.y==b.getSize()) {
+		if(this.level >= b.getLevel()&&this.x>=b.getSize()&&this.y>=b.getSize()) {
 			return true;
 		}else {
 			return false;
@@ -61,7 +61,7 @@ public class Player {
 	
 	//mutators
 	public void setLevel(int l) {
-		level=l;
+		level+=l;
 	}
 	public void setX(int row) {
 		x=row;
@@ -69,7 +69,8 @@ public class Player {
 	public void setY(int column) {
 		y=column;
 	}
+	//increment energy
 	public void setEnergy(int e) {
-		energy=e;
+		energy+=e;
 	}
 }

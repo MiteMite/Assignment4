@@ -104,16 +104,68 @@ public class LetUsPlay {
 				break;
 		}
 		
-		
+		int maxTurn = 0;
+		boolean firstTurn=true;
 		while(playing) {
 			for(Player player : playerArray) {
-				if(player.getEnergy()<=0) {
-					for(int i=0;i<3;i++) {
-						dice.rollDice();
-						
+				if(firstTurn) {
+					firstTurn=false;
+					if(player.getEnergy()<=0) {
+						for(int i=0;i<3;i++) {
+							dice.rollDice();
+							if(dice.isDouble()) {
+								player.setEnergy(2);
+							}
+						}
+					}
+					//if after 3 rolls still 0 energy, player is too weak to move so go to next player
+					if(player.getEnergy()==0) {
+						continue;
 					}
 				}
+				System.out.println("It is "+player.getName()+"'s turn");
+				//player rolls dice
+				dice.rollDice();
+				if(dice.isDouble()) {
+					player.setEnergy(2);
+					System.out.println(player.getName()+" you rolled "+dice.toString());
+					System.out.println("Congratulations you rolled double "+dice.getDieValue()+" your energy went up by 2 units");
+				}else {
+					System.out.println(player.getName()+" you rolled "+dice.toString());
+				}
+				
+				//calculate new potential location
+				int potentialX=player.getEnergy()/board.getSize();
+				int potentialY=player.getEnergy()%board.getSize();
+				
+				//check if potential position is off board
+				if(potentialX<board.getSize()&&potentialY<board.getSize()) {
+					player.setX(player.getX()+potentialX);
+					player.setY(player.getY()+potentialY);	
+					player.setLevel(1);
+				}else {
+					player.setLevel(1);
+				}
+				
+				System.out.println(player.getName()+" X is "+player.getX()+" Y is "+player.getY());
+
+				
+				//System.out.println("Your energy is adjusted by "+board.getEnergyAdj(player.getLevel(), player.getX(), player.getY())+" for landing at ("+player.getX()+","+player.getY()+")"+" at level "+player.getLevel());
+
+				
+				
 				System.out.println(player.toString());
+				
+				/*if(maxTurn<20) {
+					maxTurn++;					
+				}else {
+					playing = false; //test for a few iterations
+				}*/
+				
+				if(player.won(board)) {
+					System.out.println("The winner is player "+player.getName()+". Well done!!!");
+					playing = false;
+				}
 			}
 		}
 

@@ -27,7 +27,10 @@ public class Dice {
 		}
 	}
 	public String toString() {
-		String message = "Die1: "+die1+"Die2: "+die2;
+		String message = "Die1: "+die1+" Die2: "+die2;
 		return message;
+	}
+	public int getDieValue() {
+		return die1;
 	}
 }
