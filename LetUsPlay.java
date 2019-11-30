@@ -3,6 +3,7 @@
 //Written by: Simon Fortier Drouin 27207328
 //For COMP 248 Section FF – Fall 2019
 //--------------------------------------------------------
+
 import java.util.Random;
 import java.util.Scanner;
 
@@ -104,12 +105,10 @@ public class LetUsPlay {
 				break;
 		}
 		
-		int maxTurn = 0;
-		boolean firstTurn=true;
+		//boolean firstTurn=true;
 		while(playing) {
 			for(Player player : playerArray) {
-				if(firstTurn) {
-					firstTurn=false;
+
 					if(player.getEnergy()<=0) {
 						for(int i=0;i<3;i++) {
 							dice.rollDice();
@@ -117,9 +116,9 @@ public class LetUsPlay {
 								player.setEnergy(2);
 							}
 						}
-					}
+					
 					//if after 3 rolls still 0 energy, player is too weak to move so go to next player
-					if(player.getEnergy()==0) {
+					if(player.getEnergy()<=0) {
 						continue;
 					}
 				}
@@ -131,7 +130,7 @@ public class LetUsPlay {
 					System.out.println(player.getName()+" you rolled "+dice.toString());
 					System.out.println("Congratulations you rolled double "+dice.getDieValue()+" your energy went up by 2 units");
 				}else {
-					System.out.println(player.getName()+" you rolled "+dice.toString());
+					System.out.println("You rolled "+dice.toString());
 				}
 				
 				//calculate new potential location
@@ -139,36 +138,90 @@ public class LetUsPlay {
 				int potentialY=player.getEnergy()%board.getSize();
 				
 				//check if potential position is off board
-				if(potentialX<board.getSize()&&potentialY<board.getSize()) {
+				if(player.getX()+potentialX<=board.getSize()&&player.getY()+potentialY<=board.getSize()) {
 					player.setX(player.getX()+potentialX);
 					player.setY(player.getY()+potentialY);	
-					player.setLevel(1);
 				}else {
-					player.setLevel(1);
+					player.setX(potentialX%board.getSize());
+					player.setY(potentialY%board.getSize());
+					if(player.getLevel()<board.getLevel()) {
+						player.setLevel(player.getLevel()+1);
+					}
 				}
 				
-				System.out.println(player.getName()+" X is "+player.getX()+" Y is "+player.getY());
+				//check if other player is at same potential position
+				for(int i=0;i<playerArray.length;i++) {
+					if(player.getName().compareTo(playerArray[i].getName())!=0) {
+						if(player.getX()==playerArray[i].getX()&&player.getY()==playerArray[i].getY()&&player.getLevel()==playerArray[i].getLevel()) {
+							//check if both are not at zero
+							if(player.getX()!=0&&player.getY()!=0&&player.getLevel()!=0) {
+								System.out.println("\nPlayer "
+										+playerArray[i]
+										+" is at your new location\n what do you want to do?\n"
+										+ "0 - Challenge and risk loosing 50% of your energy units if you lose\n or move to a new location and get 50% of other players energy units\n"
+										+"1 - to move down one level or move to (0,0) if at level 0 and lose 2 energy units");
+								int choice = keyboard.nextInt();
+								switch(choice) {
+									case 0:
+										if(new Random().nextInt(10)<6) {
+											//swap players positions
+											Player temp = player;
+											player.moveTo(playerArray[i]);
+											playerArray[i].moveTo(temp);
+											player.setEnergy(playerArray[i].getEnergy()/2); //give half energy to winner
+											playerArray[i].setEnergy(-playerArray[i].getEnergy()/2); //lose half energy
+										}
+										break;
+									case 1:
+										if(player.getLevel()>=0) {
+											player.setX(0);
+											player.setY(0);
+										}else {
+											player.setLevel(-1);
+										}
+										break;
+									default:
+										continue;
+								}
+							}
+						}
+					}
+				}
+				
 
-				
-				//System.out.println("Your energy is adjusted by "+board.getEnergyAdj(player.getLevel(), player.getX(), player.getY())+" for landing at ("+player.getX()+","+player.getY()+")"+" at level "+player.getLevel());
-
-				
-				
-				System.out.println(player.toString());
-				
-				/*if(maxTurn<20) {
-					maxTurn++;					
-				}else {
-					playing = false; //test for a few iterations
-				}*/
-				
+				//adjust index
+				int indeX=0;
+				int indeY=0;
+				int indeL=0;
+				if(player.getLevel()>0&&player.getLevel()<=board.getLevel()) {
+					indeL=1;
+				}
+				if(player.getX()>0&&player.getX()<=board.getSize()) {
+					indeX=1;
+				}
+				if(player.getY()>0&&player.getY()<=board.getSize()) {
+					indeY=1;
+				}
+				if(indeX!=0||indeY!=0||indeL!=0) {
+					player.setEnergy(board.getEnergyAdj(player.getLevel()-indeL, player.getX()-indeX, player.getY()-indeY));
+					System.out.println("Your energy is adjusted by "+board.getEnergyAdj(player.getLevel()-indeL, player.getX()-indeX, player.getY()-indeY)+" for landing at ("+player.getX()+","+player.getY()+")"+" at level "+player.getLevel());
+				}
+				System.out.println(player.toString()+"\n");
+				if(playing) {
+					System.out.println("At the end of this round:");
+					System.out.println("\t"+playerArray[0].toString());
+					System.out.println("\t"+playerArray[1].toString());
+					System.out.print("Any key to continue to next round ...\n");
+					//keyboard.next(); //uncomment to stop at each iteration
+					System.out.println("");
+				}
 				if(player.won(board)) {
 					System.out.println("The winner is player "+player.getName()+". Well done!!!");
 					playing = false;
+					break;
 				}
 			}
 		}
-
 		
 		keyboard.close();
 	}

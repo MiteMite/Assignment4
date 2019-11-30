@@ -61,7 +61,7 @@ public class Player {
 	
 	//mutators
 	public void setLevel(int l) {
-		level+=l;
+		level=l;
 	}
 	public void setX(int row) {
 		x=row;
