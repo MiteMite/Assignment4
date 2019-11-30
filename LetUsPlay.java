@@ -21,7 +21,8 @@ public class LetUsPlay {
 	boolean playing = true;
 	
 	private static void displayBanner() {
-		System.out.println("Welcome to my game!");
+		System.out.println("\tWelcome to my game!\n"
+	+"\t===================");
 	}
 	private void gameSetup() {
 		
@@ -142,7 +143,7 @@ public class LetUsPlay {
 					player.setX(player.getX()+potentialX);
 					player.setY(player.getY()+potentialY);	
 				}else {
-					player.setX(potentialX%board.getSize());
+					player.setX(potentialX/board.getSize());
 					player.setY(potentialY%board.getSize());
 					if(player.getLevel()<board.getLevel()) {
 						player.setLevel(player.getLevel()+1);
@@ -160,8 +161,18 @@ public class LetUsPlay {
 										+" is at your new location\n what do you want to do?\n"
 										+ "0 - Challenge and risk loosing 50% of your energy units if you lose\n or move to a new location and get 50% of other players energy units\n"
 										+"1 - to move down one level or move to (0,0) if at level 0 and lose 2 energy units");
-								int choice = keyboard.nextInt();
-								switch(choice) {
+								boolean badChoice=true;
+								String choice ="";
+								while(badChoice) {
+									choice = keyboard.next();
+									if(choice.charAt(0)!='0'&&choice.charAt(0)!='1') {
+										System.out.println("Sorry but "+choice+" is not a valid choice");
+									}else {
+										break;
+									}
+								}
+
+								switch(Integer.parseInt(choice)) {
 									case 0:
 										if(new Random().nextInt(10)<6) {
 											//swap players positions
@@ -170,6 +181,9 @@ public class LetUsPlay {
 											playerArray[i].moveTo(temp);
 											player.setEnergy(playerArray[i].getEnergy()/2); //give half energy to winner
 											playerArray[i].setEnergy(-playerArray[i].getEnergy()/2); //lose half energy
+											System.out.print("Bravo!!! you won the challenge.");
+										}else {
+											player.setEnergy(player.getEnergy()/2); //lost challenge lose half energy
 										}
 										break;
 									case 1:
