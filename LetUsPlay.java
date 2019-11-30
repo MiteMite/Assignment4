@@ -134,9 +134,15 @@ public class LetUsPlay {
 					System.out.println("You rolled "+dice.toString());
 				}
 				
+				
+				//TODO correct potential location algorithm
 				//calculate new potential location
 				int potentialX=player.getEnergy()/board.getSize();
 				int potentialY=player.getEnergy()%board.getSize();
+				//hold original location
+				int tempX=player.getX();
+				int tempY=player.getY();
+				int tempL=player.getLevel();
 				
 				//check if potential position is off board
 				if(player.getX()+potentialX<=board.getSize()&&player.getY()+potentialY<=board.getSize()) {
@@ -148,6 +154,13 @@ public class LetUsPlay {
 					if(player.getLevel()<board.getLevel()) {
 						player.setLevel(player.getLevel()+1);
 					}
+				}
+				if(player.getLevel()>=board.getLevel()) {
+					System.out.println("Sorry that throw takes you off the grid and you loose 2 units of energy.\n");
+					player.setX(tempX);
+					player.setY(tempY);
+					player.setLevel(tempL);
+					player.setEnergy(player.getEnergy()-2);
 				}
 				
 				//check if other player is at same potential position
@@ -202,7 +215,7 @@ public class LetUsPlay {
 					}
 				}
 				
-
+				//TODO when positions are right this should become unneccessary
 				//adjust index
 				int indeX=0;
 				int indeY=0;
