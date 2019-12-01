@@ -30,7 +30,7 @@ public class Player {
 	}
 	//returns if the player has reached the last spot on the board
 	public boolean won(Board b) {
-		if(this.level >= b.getLevel()&&this.x>=b.getSize()&&this.y>=b.getSize()) {
+		if(this.level >= b.getLevel()-1&&this.x>=b.getSize()-1&&this.y>=b.getSize()-1) {
 			return true;
 		}else {
 			return false;

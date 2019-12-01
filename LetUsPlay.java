@@ -133,9 +133,7 @@ public class LetUsPlay {
 				}else {
 					System.out.println("You rolled "+dice.toString());
 				}
-				
-				
-				//TODO correct potential location algorithm
+
 				//calculate new potential location
 				int potentialX=player.getEnergy()/board.getSize();
 				int potentialY=player.getEnergy()%board.getSize();
@@ -145,24 +143,32 @@ public class LetUsPlay {
 				int tempL=player.getLevel();
 				
 				//check if potential position is off board
-				if(player.getX()+potentialX<=board.getSize()&&player.getY()+potentialY<=board.getSize()) {
-					player.setX(player.getX()+potentialX);
-					player.setY(player.getY()+potentialY);	
-				}else {
-					player.setX(potentialX/board.getSize());
-					player.setY(potentialY%board.getSize());
-					if(player.getLevel()<board.getLevel()) {
-						player.setLevel(player.getLevel()+1);
+				if(player.getLevel()<board.getLevel()) {
+					if(player.getX()+potentialX>=board.getSize()&&player.getY()+potentialY>=board.getSize()) {
+						System.out.println("Sorry that throw takes you off the grid and you loose 2 units of energy.\n");
+						player.setLevel(tempL);
+						player.setEnergy(-2);
+						player.setX(tempX);
+						player.setY(tempY);
+					}else {
+						if(player.getX()+potentialX<board.getSize()) {
+							player.setX(player.getX()+potentialX);
+						}else {
+							player.setX((player.getX()+potentialX)%board.getSize());
+							if(tempL+1<board.getLevel()) {
+								player.setLevel(player.getLevel()+1);
+							}
+						}
+						if(player.getY()+potentialY<board.getSize()) {
+							player.setY(player.getY()+potentialY);
+						}else {
+							player.setY((player.getY()+potentialY)%board.getSize());
+							if(tempL+1<board.getLevel()) {
+								player.setLevel(player.getLevel()+1);
+							}
+						}
 					}
 				}
-				if(player.getLevel()>=board.getLevel()) {
-					System.out.println("Sorry that throw takes you off the grid and you loose 2 units of energy.\n");
-					player.setX(tempX);
-					player.setY(tempY);
-					player.setLevel(tempL);
-					player.setEnergy(player.getEnergy()-2);
-				}
-				
 				//check if other player is at same potential position
 				for(int i=0;i<playerArray.length;i++) {
 					if(player.getName().compareTo(playerArray[i].getName())!=0) {
@@ -170,7 +176,7 @@ public class LetUsPlay {
 							//check if both are not at zero
 							if(player.getX()!=0&&player.getY()!=0&&player.getLevel()!=0) {
 								System.out.println("\nPlayer "
-										+playerArray[i]
+										+playerArray[i].getName()
 										+" is at your new location\n what do you want to do?\n"
 										+ "0 - Challenge and risk loosing 50% of your energy units if you lose\n or move to a new location and get 50% of other players energy units\n"
 										+"1 - to move down one level or move to (0,0) if at level 0 and lose 2 energy units");
@@ -214,32 +220,15 @@ public class LetUsPlay {
 						}
 					}
 				}
-				
-				//TODO when positions are right this should become unneccessary
-				//adjust index
-				int indeX=0;
-				int indeY=0;
-				int indeL=0;
-				if(player.getLevel()>0&&player.getLevel()<=board.getLevel()) {
-					indeL=1;
-				}
-				if(player.getX()>0&&player.getX()<=board.getSize()) {
-					indeX=1;
-				}
-				if(player.getY()>0&&player.getY()<=board.getSize()) {
-					indeY=1;
-				}
-				if(indeX!=0||indeY!=0||indeL!=0) {
-					player.setEnergy(board.getEnergyAdj(player.getLevel()-indeL, player.getX()-indeX, player.getY()-indeY));
-					System.out.println("Your energy is adjusted by "+board.getEnergyAdj(player.getLevel()-indeL, player.getX()-indeX, player.getY()-indeY)+" for landing at ("+player.getX()+","+player.getY()+")"+" at level "+player.getLevel());
-				}
+				player.setEnergy(board.getEnergyAdj(player.getLevel(), player.getX(), player.getY()));
+				System.out.println("Your energy is adjusted by "+board.getEnergyAdj(player.getLevel(), player.getX(), player.getY())+" for landing at ("+player.getX()+","+player.getY()+")"+" at level "+player.getLevel());
 				System.out.println(player.toString()+"\n");
 				if(playing) {
 					System.out.println("At the end of this round:");
 					System.out.println("\t"+playerArray[0].toString());
 					System.out.println("\t"+playerArray[1].toString());
 					System.out.print("Any key to continue to next round ...\n");
-					//keyboard.next(); //uncomment to stop at each iteration
+					keyboard.next(); //uncomment to stop at each iteration
 					System.out.println("");
 				}
 				if(player.won(board)) {
